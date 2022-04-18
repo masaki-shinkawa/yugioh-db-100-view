@@ -1,0 +1,22 @@
+{
+  "name": "遊戯王DB100件設定",
+  "action": {},
+  "manifest_version": 3,
+  "version": "0.1",
+  "description": "100件出す",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://db.yugioh-card.com/*",
+        "https://www.db.yugioh-card.com/*"
+      ],
+      "js": [
+        "script.js"
+      ]
+    }
+  ]
+}
