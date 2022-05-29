@@ -7,7 +7,9 @@
     "dev": "tsc -w",
     "clean": "rimraf dist",
     "build": "tsc",
-    "deploy": "yarn clean && yarn build && cp -p ./src/manifest.json ./dist",
+    "copy:manifest": "cp -p ./src/manifest.json ./dist",
+    "zip": "zip -r deploy.zip dist",
+    "deploy": "yarn clean && yarn build && yarn copy:manifest && yarn zip",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
