@@ -9,6 +9,7 @@ type FromToInput = {
 };
 
 export const clearAllFilterSearch = () => {
+  searchFilterByCategory()[0].click();
   allClearForCheckboxNodeList(searchFilterByAttr());
   allClearForCheckboxNodeList(searchFilterByEffe());
   allClearForCheckboxNodeList(searchFilterBySpecies());
@@ -20,6 +21,17 @@ export const clearAllFilterSearch = () => {
   allClearForCheckboxNodeList(searchFilterByLinkArrow());
   allClearForFromTo(searchFilterByAttack());
   allClearForFromTo(searchFilterByDefense());
+};
+
+/** classにnowが存在するindexの取得 */
+const getNowIndex = (nodeList: NodeListOf<HTMLLIElement>) => {
+  let index = 0;
+  nodeList.forEach((node, i) => {
+    if (/now/.test(node.className)) {
+      index = i;
+    }
+  });
+  return index;
 };
 
 /** 選択済みの要素のvalueを取得する */
@@ -61,8 +73,11 @@ const getAndOrValue = (andOr: AndOrRadio) => {
   };
 };
 
+/** 選択状態をオブジェクトで取得 */
 const getInputData = () => {
   return {
+    // Category
+    category: getNowIndex(searchFilterByCategory()),
     // Value
     attr: getSelectedValue(searchFilterByAttr()),
     effe: getSelectedValue(searchFilterByEffe()),
@@ -83,6 +98,7 @@ const getInputData = () => {
   };
 };
 
+/** JSON形式で保存 */
 export const saveLocalStorage = (presetName: string) => {
   const data = getInputData();
   const json = JSON.stringify(data);
@@ -106,9 +122,15 @@ const allClearForFromTo = (fromTo: FromToInput) => {
   fromTo.to.value = "";
 };
 
+/** nameでElementを取得 */
 const searchFilterByName = (name: string, like: boolean = false) => {
   const query = like ? `input[name*='${name}']` : `input[name='${name}']`;
   return document.querySelectorAll<HTMLInputElement>(query);
+};
+
+/** カテゴリの取得 */
+const searchFilterByCategory = () => {
+  return document.querySelectorAll<HTMLLIElement>("#ctype_set > ul > li");
 };
 
 /** 属性の要素を取得 */
@@ -187,5 +209,3 @@ const searchFilterByDefense = (): FromToInput => {
     to: document.querySelector<HTMLInputElement>("#defto"),
   };
 };
-
-const searchFilter = () => {};

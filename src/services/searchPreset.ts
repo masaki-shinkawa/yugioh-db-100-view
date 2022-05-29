@@ -59,7 +59,7 @@ const createButton = (text: string, type: "my" | "orn" | "") => {
 /** 保存ボタンの生成 */
 const createSaveButton = (search: Element | null) => {
   const saveButton = createButton("保存", "my");
-  const dialog = document.querySelector<HTMLDialogElement>("dialog");
+  const dialog = document.querySelector<HTMLDialogElement>("#saveDialog");
   saveButton.addEventListener("click", () => dialog?.showModal());
   search?.appendChild(saveButton);
 };
@@ -70,6 +70,7 @@ const createRestoreButton = (search: Element | null) => {
   search?.appendChild(restoreButton);
 };
 
+/** 初期化 */
 const initialize = () => {
   // 検索欄取得
   const search = document.querySelector(
