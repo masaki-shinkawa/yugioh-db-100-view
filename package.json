@@ -1,0 +1,28 @@
+{
+  "name": "yugioh-db-100-view",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "deploy": "yarn clean && yarn build && cp -p ./src/manifest.json ./dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masaki-shinkawa/yugioh-db-100-view.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/masaki-shinkawa/yugioh-db-100-view/issues"
+  },
+  "homepage": "https://github.com/masaki-shinkawa/yugioh-db-100-view#readme",
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.2"
+  }
+}
