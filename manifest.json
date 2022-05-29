@@ -2,7 +2,7 @@
   "name": "遊戯王DB検索サポート",
   "action": {},
   "manifest_version": 3,
-  "version": "0.1",
+  "version": "0.2",
   "description": "検索後の表示件数を100件にします",
   "permissions": [],
   "content_scripts": [
