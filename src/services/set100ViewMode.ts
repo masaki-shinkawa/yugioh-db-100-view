@@ -1,7 +1,4 @@
-export const set100ViewMode = () => {
-  var url = new URL(location.href);
-  if (url.pathname !== "/yugiohdb/card_search.action") return;
-
+export const set100ViewMode = (url: URL) => {
   const selectTag = document.getElementById("rp");
   if (!selectTag) return;
 
