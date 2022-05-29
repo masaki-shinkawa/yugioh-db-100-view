@@ -1,16 +1,18 @@
 {
-  "name": "yugioh-db-100-view",
+  "name": "my-webpack-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "My webpack project",
   "main": "script.js",
   "scripts": {
-    "dev": "tsc -w",
+    "dev": "webpack --watch",
     "clean": "rimraf dist",
-    "build": "tsc",
-    "copy:manifest": "cp -p ./src/manifest.json ./dist",
+    "build": "webpack --mode=production --node-env=production",
+    "copy:manifest": "cp -p ./manifest.json ./dist",
     "zip": "zip -r deploy.zip dist",
     "deploy": "yarn clean && yarn build && yarn copy:manifest && yarn zip",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production"
   },
   "repository": {
     "type": "git",
@@ -24,7 +26,19 @@
   },
   "homepage": "https://github.com/masaki-shinkawa/yugioh-db-100-view#readme",
   "devDependencies": {
+    "@webpack-cli/generators": "^2.4.2",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.2"
+    "sass": "^1.52.1",
+    "sass-loader": "^13.0.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.2",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
   }
 }
