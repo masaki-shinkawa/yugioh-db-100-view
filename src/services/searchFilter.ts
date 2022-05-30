@@ -8,6 +8,9 @@ type FromToInput = {
   to: HTMLInputElement | null;
 };
 
+export type UserSelectedData = ReturnType<typeof getUserSelectedData>;
+export type LocalStorageData = { [key: string]: UserSelectedData };
+
 export const clearAllFilterSearch = () => {
   searchFilterByCategory()[0].click();
   allClearForCheckboxNodeList(searchFilterByAttr());
@@ -21,6 +24,98 @@ export const clearAllFilterSearch = () => {
   allClearForCheckboxNodeList(searchFilterByLinkArrow());
   allClearForFromTo(searchFilterByAttack());
   allClearForFromTo(searchFilterByDefense());
+};
+
+/** 選択状態をオブジェクトで取得 */
+const getUserSelectedData = () => {
+  return {
+    // Category
+    category: getNowIndex(searchFilterByCategory()),
+    // Value
+    attr: getSelectedValue(searchFilterByAttr()),
+    effe: getSelectedValue(searchFilterByEffe()),
+    species: getSelectedValue(searchFilterBySpecies()),
+    other: getSelectedValue(searchFilterByOther()),
+    jogai: getSelectedValue(searchFilterByJogai()),
+    linkArrow: getSelectedValue(searchFilterByLinkArrow()),
+    // Index
+    level: getSelectedIndex(searchFilterByLevel()),
+    pscale: getSelectedIndex(searchFilterByPscale()),
+    linkNumber: getSelectedIndex(searchFilterByLinkNumber()),
+    // FromTo
+    attack: getFromToValue(searchFilterByAttack()),
+    defense: getFromToValue(searchFilterByDefense()),
+    // AndOr
+    otherAndOr: getAndOrValue(searchFilterByOtherAndOr()),
+    linkArrowAndOr: getAndOrValue(searchFilterByLinkArrowAndOr()),
+  };
+};
+
+/** 選択状態を復元 */
+export const restoreUserSelectedData = (data: UserSelectedData) => {
+  clearAllFilterSearch();
+  searchFilterByCategory()[data.category]?.click();
+  // value
+  clickByValue(searchFilterByAttr(), data.attr);
+  clickByValue(searchFilterByEffe(), data.effe);
+  clickByValue(searchFilterBySpecies(), data.species);
+  clickByValue(searchFilterByOther(), data.other);
+  clickByValue(searchFilterByJogai(), data.jogai);
+  clickByValue(searchFilterByLinkArrow(), data.linkArrow);
+  // Index
+  clickById(searchFilterByLevel(), data.level, "level_");
+  clickById(searchFilterByPscale(), data.pscale, "Pscale_");
+  clickById(searchFilterByLinkNumber(), data.linkNumber, "Link_");
+  // FromTo
+  clickFromToValue(searchFilterByAttack(), data.attack);
+  clickFromToValue(searchFilterByDefense(), data.defense);
+  // AndOr
+  clickAndOrRadio(searchFilterByOtherAndOr(), data.otherAndOr);
+  clickAndOrRadio(searchFilterByLinkArrowAndOr(), data.linkArrowAndOr);
+};
+
+/** valueが一致するものをクリックする */
+const clickByValue = (
+  elements: NodeListOf<HTMLInputElement>,
+  values: string[]
+) => {
+  elements.forEach((element) => {
+    if (values.includes(element.value)) element.click();
+  });
+};
+
+/** IDが一致するものをクリックする */
+const clickById = (
+  elements: NodeListOf<HTMLInputElement>,
+  idList: string[],
+  prefix: string = ""
+) => {
+  const idKeys = idList.map((id) => `${prefix}${id}`);
+  elements.forEach((element) => {
+    if (idKeys.includes(element.id)) element.click();
+  });
+};
+
+/** FromToの値をクリックする */
+const clickFromToValue = (
+  element: FromToInput,
+  input: { from: string; to: string }
+) => {
+  if (element.from) {
+    element.from.value = input.from;
+  }
+  if (element.to) {
+    element.to.value = input.to;
+  }
+};
+
+/** AndOrの値をクリックする */
+const clickAndOrRadio = (
+  element: AndOrRadio,
+  radio: { and: boolean; or: boolean }
+) => {
+  if (radio.and) element.and?.click();
+  if (radio.or) element.or?.click();
 };
 
 /** classにnowが存在するindexの取得 */
@@ -73,36 +168,37 @@ const getAndOrValue = (andOr: AndOrRadio) => {
   };
 };
 
-/** 選択状態をオブジェクトで取得 */
-const getInputData = () => {
-  return {
-    // Category
-    category: getNowIndex(searchFilterByCategory()),
-    // Value
-    attr: getSelectedValue(searchFilterByAttr()),
-    effe: getSelectedValue(searchFilterByEffe()),
-    species: getSelectedValue(searchFilterBySpecies()),
-    other: getSelectedValue(searchFilterByOther()),
-    jogai: getSelectedValue(searchFilterByJogai()),
-    linkArrow: getSelectedValue(searchFilterByLinkArrow()),
-    // Index
-    level: getSelectedIndex(searchFilterByLevel()),
-    pscale: getSelectedIndex(searchFilterByPscale()),
-    linkNumber: getSelectedIndex(searchFilterByLinkNumber()),
-    // FromTo
-    attack: getFromToValue(searchFilterByAttack()),
-    defense: getFromToValue(searchFilterByDefense()),
-    // AndOr
-    otherAndOr: getAndOrValue(searchFilterByOtherAndOr()),
-    linkArrowAndOr: getAndOrValue(searchFilterByLinkArrowAndOr()),
-  };
+/** JSON形式で保存 */
+export const saveLocalStorage = (presetName: string) => {
+  const storageData = loadLocalStorage();
+  const data = getUserSelectedData();
+  const newData = { ...storageData, [presetName]: data };
+  const json = JSON.stringify(newData);
+  localStorage.setItem("preset", json);
+  return newData;
 };
 
 /** JSON形式で保存 */
-export const saveLocalStorage = (presetName: string) => {
-  const data = getInputData();
+export const updateLocalStorage = (data: LocalStorageData) => {
   const json = JSON.stringify(data);
-  localStorage.setItem(presetName, json);
+  localStorage.setItem("preset", json);
+};
+
+/** JSON形式で読込 */
+export const loadLocalStorage = (): LocalStorageData => {
+  const data = localStorage.getItem("preset");
+  if (!data) return {};
+  return JSON.parse(data) as LocalStorageData;
+};
+
+/** 特定のpresetを削除 */
+export const removeLocalStorage = (presetName: string): LocalStorageData => {
+  const data = localStorage.getItem("preset");
+  if (!data) return {};
+  const json = JSON.parse(data) as LocalStorageData;
+  delete json[presetName];
+  updateLocalStorage(json);
+  return json;
 };
 
 /** すべての要素を初期化する */
