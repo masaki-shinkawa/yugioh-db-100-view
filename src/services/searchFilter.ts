@@ -16,7 +16,6 @@ export const clearAllFilterSearch = () => {
   if (keyword) keyword.value = "";
   const stype = searchFilterByStype();
   if (stype) stype.value = "1";
-  searchFilterByCategory()[0].click();
   allClearForCheckboxNodeList(searchFilterByAttr());
   allClearForCheckboxNodeList(searchFilterByEffe());
   allClearForCheckboxNodeList(searchFilterBySpecies());
@@ -61,13 +60,13 @@ const getUserSelectedData = () => {
 
 /** 選択状態を復元 */
 export const restoreUserSelectedData = (data: UserSelectedData) => {
+  // カテゴリを先に切り替えてから初期化処理をする
+  searchFilterByCategory()[data.category]?.click();
   clearAllFilterSearch();
   const keyword = searchFilterByKeyword();
   if (keyword) keyword.value = data.keyword;
   const stype = searchFilterByStype();
   if (stype) stype.value = data.stype;
-
-  searchFilterByCategory()[data.category]?.click();
   // value
   clickByValue(searchFilterByAttr(), data.attr);
   clickByValue(searchFilterByEffe(), data.effe);

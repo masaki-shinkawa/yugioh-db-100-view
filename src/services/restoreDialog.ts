@@ -1,10 +1,8 @@
 import { createButton } from "./createButton";
 import {
-  loadLocalStorage,
   LocalStorageData,
   removeLocalStorage,
   restoreUserSelectedData,
-  saveLocalStorage,
 } from "./searchFilter";
 
 export const createLi = (
