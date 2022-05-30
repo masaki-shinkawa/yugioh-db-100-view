@@ -12,6 +12,10 @@ export type UserSelectedData = ReturnType<typeof getUserSelectedData>;
 export type LocalStorageData = { [key: string]: UserSelectedData };
 
 export const clearAllFilterSearch = () => {
+  const keyword = searchFilterByKeyword();
+  if (keyword) keyword.value = "";
+  const stype = searchFilterByStype();
+  if (stype) stype.value = "1";
   searchFilterByCategory()[0].click();
   allClearForCheckboxNodeList(searchFilterByAttr());
   allClearForCheckboxNodeList(searchFilterByEffe());
@@ -29,6 +33,10 @@ export const clearAllFilterSearch = () => {
 /** 選択状態をオブジェクトで取得 */
 const getUserSelectedData = () => {
   return {
+    // Keyword
+    keyword: searchFilterByKeyword()?.value ?? "",
+    // Stype
+    stype: searchFilterByStype()?.value ?? "1",
     // Category
     category: getNowIndex(searchFilterByCategory()),
     // Value
@@ -54,6 +62,11 @@ const getUserSelectedData = () => {
 /** 選択状態を復元 */
 export const restoreUserSelectedData = (data: UserSelectedData) => {
   clearAllFilterSearch();
+  const keyword = searchFilterByKeyword();
+  if (keyword) keyword.value = data.keyword;
+  const stype = searchFilterByStype();
+  if (stype) stype.value = data.stype;
+
   searchFilterByCategory()[data.category]?.click();
   // value
   clickByValue(searchFilterByAttr(), data.attr);
@@ -222,6 +235,16 @@ const allClearForFromTo = (fromTo: FromToInput) => {
 const searchFilterByName = (name: string, like: boolean = false) => {
   const query = like ? `input[name*='${name}']` : `input[name='${name}']`;
   return document.querySelectorAll<HTMLInputElement>(query);
+};
+
+/** キーワードの取得 */
+const searchFilterByKeyword = () => {
+  return document.querySelector<HTMLInputElement>("#keyword");
+};
+
+/** 検索タイプの取得 */
+const searchFilterByStype = () => {
+  return document.querySelector<HTMLSelectElement>("#stype");
 };
 
 /** カテゴリの取得 */

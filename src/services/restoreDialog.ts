@@ -19,6 +19,9 @@ export const createLi = (
   const span = document.createElement("span");
   span.innerHTML = name;
   span.style.flex = "1";
+  span.style.whiteSpace = "nowrap";
+  span.style.textOverflow = "ellipsis";
+  span.style.overflowX = "hidden";
   const restore = createButton("復元", "orn");
   restore.addEventListener("click", () => {
     const data = presets[name];
@@ -61,6 +64,9 @@ export const restoreDialog = (presets: LocalStorageData) => {
   p.innerText = "プリセットを選択してください";
   // <ul><li>
   const ul = document.createElement("ul");
+  ul.style.maxHeight = "70vh";
+  ul.style.maxWidth = "70vw";
+  ul.style.overflowY = "scroll";
   resetUl(ul);
   const li = createLiList(dialog, ul, presets);
   ul.append(...li);
